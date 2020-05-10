@@ -16,6 +16,68 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
+async function init() {
+    await inquirer.prompt([
+        questions.type
+    ]).then(async function(data) {
+        if (data.type[1] != undefined || data.type[0] === undefined) {
+            console.log("Please select one type of employee")
+            return init();
+        }
+        switch(data.type[0]) {
+            case "manager" :
+                let employeeObject = new Manager(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry("email"), await inquiry(data.type[0], "extra"));
+                break;
+            case "Engineer" :
+                let employeeObject = new Engineer(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry("email"), await inquiry(data.type[0], "extra"));
+                break;
+            case "intern" :
+                let employeeObject = new intern(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry("email"), await inquiry(data.type[0], "extra"));
+                break;
+        }
+        employeeArray.push(employeeObject);
+        continueStatement();
+    });
+}
+    //employee type question
+async function inquiry(question, dataName) {
+    if (dataName === undefined) {
+        let dataName = question;
+    }
+    return await inquirer.prompt([questions[question]]).then(function(data) {
+        //validation empty
+        if (data[dataName] === "") {
+            console.log("please enter a value.");
+            return inquiry(question.dataName);
+        }
+        //validate email
+        else if (question === "email" && data[dataName].indexOf("@") === -1){
+            console.log("Please enter a valid email address.");
+            return inquiry(question.dataName);
+        }
+        return data[dataName];
+        });
+}
+//Add additional employees
+function continueStatement() {
+    inquirer.prompt([questions.continue]).then(function(data) {
+        //if yes, loop through init function
+        if (data.continue[0] === "Yes") {
+            init();
+        }
+        //otherwise, end loop and create the org chart html
+        else {
+            fs.writeFile(outputPath, render(employeeArray), function(err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log(`success! Your organization chart is at ${outputPath}.`);
+            });
+        }
+    });
+}
+//start script
+init();
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
