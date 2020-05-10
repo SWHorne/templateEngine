@@ -26,13 +26,13 @@ async function init() {
         }
         switch(data.type[0]) {
             case "manager" :
-                let employeeObject = new Manager(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry("email"), await inquiry(data.type[0], "extra"));
+                var employeeObject = new Manager(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry(data.type[0], "extra"));
                 break;
             case "Engineer" :
-                let employeeObject = new Engineer(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry("email"), await inquiry(data.type[0], "extra"));
+                var employeeObject = new Engineer(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry(data.type[0], "extra"));
                 break;
             case "intern" :
-                let employeeObject = new intern(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry("email"), await inquiry(data.type[0], "extra"));
+                var employeeObject = new intern(await inquiry("name"), await inquiry("id"), await inquiry("email"), await inquiry(data.type[0], "extra"));
                 break;
         }
         employeeArray.push(employeeObject);
